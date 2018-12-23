@@ -9,7 +9,11 @@ ReSpeaker python library is an open source python library to provide basic funct
 It uses [PocketSphinx](https://github.com/cmusphinx/pocketsphinx) for keyword spotting and uses [webrtcvad](https://github.com/wiseman/py-webrtcvad) for voice activity detecting.
 
 
-### Installation
+### Installation (Not for ReSpeaker Core)
+
+>Note: This library is already installed on ReSpeaker Core by default. Please skip the installation step and don't re-install it
+
+
 `python` and `pip` are required.
 
 1. Install pocketsphinx, webrtcvad
@@ -29,6 +33,31 @@ It uses [PocketSphinx](https://github.com/cmusphinx/pocketsphinx) for keyword sp
 2. `pip install pyaudio respeaker --upgrade`
 
 
+3. Install hidapi (optional)
+
+    
+MacOSX install ReSpeaker Python Library
+
+0.(brew install python2)
+
+1.pip2 install pocketsphinx webrtcvad
+
+2.(Since pyAudio has portAudio as a dependency, you first have to install portaudio: **brew install portaudio**) pip install pyaudio respeaker --upgrade
+3.Install hidapi (optional)
+
+
+### stdio.h file not found error on macOS Mojave
+For anyone discovering this later on who may not be familiar with the command line, here's how to install the macOS_SDK_headers_for_macOS_10.14.pkg package as explained in @yicongli's response above:
+
+In Terminal.app or any shell app like iTerm:
+
+cd /Library/Developer/CommandLineTools/Packages/
+open macOS_SDK_headers_for_macOS_10.14.pkg
+
+Make sure you go through the whole thing and try to install the gem that failed to install again or run bundle install again if this was something you encountered while trying to install from a Gemfile.
+
+
+
 
 ### Getting started
 
@@ -37,7 +66,6 @@ import logging
 import time
 from threading import Thread, Event
 
-import fix_import
 from respeaker import Microphone
 
 
@@ -58,6 +86,7 @@ def main():
 
     quit_event = Event()
     thread = Thread(target=task, args=(quit_event,))
+    thread.daemon = True
     thread.start()
     while True:
         try:
@@ -66,7 +95,7 @@ def main():
             print('Quit')
             quit_event.set()
             break
-    thread.join()
+    time.sleep(1)
 
 if __name__ == '__main__':
     main()
