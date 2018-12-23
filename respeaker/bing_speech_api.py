@@ -77,7 +77,7 @@ class BingSpeechAPI:
     def authenticate(self):
         if self.expire_time is None or monotonic() > self.expire_time:  # first credential request, or the access token from the previous one expired
             # get an access token using OAuth
-            credential_url = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
+            credential_url = "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issuetoken"
             headers = {"Ocp-Apim-Subscription-Key": self.key}
 
             start_time = monotonic()
@@ -107,8 +107,8 @@ class BingSpeechAPI:
             "version": "3.0",
             "requestid": uuid.uuid4(),
             "appID": "D4D52672-91D7-4C74-8AD8-42B1D98141A5",
-            "format": "json",
-            "locale": language,
+            "format": "simple",
+            "language": language,
             "device.os": "wp7",
             "scenarios": "ulm",
             "instanceid": uuid.uuid4(),
@@ -120,7 +120,7 @@ class BingSpeechAPI:
             "Content-Type": "audio/wav; samplerate=16000; sourcerate=16000; trustsourcerate=true",
         }
 
-        url = "https://speech.platform.bing.com/recognize/query"
+        url = "	https://westeurope.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1"
         response = self.session.post(url, params=params, headers=headers, data=data)
 
         if response.status_code != 200:
@@ -163,7 +163,7 @@ class BingSpeechAPI:
             "User-Agent": "TTSForPython"
         }
 
-        url = "https://speech.platform.bing.com/synthesize"
+        url = "https://westeurope.tts.speech.microsoft.com"
         response = self.session.post(url, headers=headers, data=body, stream=stream)
         if stream:
             data = response.iter_content(chunk_size=chunk_size)
